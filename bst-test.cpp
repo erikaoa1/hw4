@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
     }
     cout << "Erasing b" << endl;
     at.remove('b');
+    
 
     return 0;
 }

@@ -55,8 +55,15 @@ void test5(const char* msg)
   cout << msg << ": " <<   equalPaths(a) << endl;
 }
 
+void baseCase(){
+	setNode(a, 1, b, NULL);
+	cout << boolalpha << "Base case test: " <<   equalPaths(a) << endl;
+
+}
+
 int main()
 {
+
   a = new Node(1);
   b = new Node(2);
   c = new Node(3);
@@ -72,5 +79,14 @@ int main()
   delete b;
   delete c;
   delete d;
+	
+
+	a = new Node(1);
+	b = new Node(2);
+	baseCase();
+
+	delete a;
+	delete b;
+	//cout << "hello world" << endl;
 }
 
