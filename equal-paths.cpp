@@ -9,9 +9,23 @@ int nodeLengthChecker(Node* node);
 
 bool equalPaths(Node * root)
 {
+    int length;
+
     if (root == NULL) return true; 
     
-    int length = nodeLengthChecker(root);
+    else if (root->left == nullptr && root->right != nullptr){
+        length = nodeLengthChecker(root->right);
+    }
+
+
+    else if (root->right == nullptr && root->left != nullptr){
+        length = nodeLengthChecker(root->left);
+    }
+
+    
+    else{
+        length = nodeLengthChecker(root);
+    }
 
     if(length == -1){
         return false;

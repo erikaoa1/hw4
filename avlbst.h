@@ -177,10 +177,9 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::insertHelper(AVLNode<Key, Value>* root
   
     //update balance factor after each insertion 
     root->setBalance(height(root->getLeft()) - height(root->getRight())); //balance factor is LH - RH
-    int balance = root->getBalance(); 
 
-  if (balance == 2 || balance == -2){
-      return balanceTree(root, item); //updated root after balance
+  if (root->getBalance() == 2 || root->getBalance() == -2){ //if balance = -2 or 2, the subtree is out of balance
+      return balanceTree(root, item); //update root after balancing tree
   } 
   
     return root; //root did not change
@@ -195,7 +194,7 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::balanceTree(AVLNode<Key, Value>* root,
         return rotateRight(root);
     }
 
-  //if balance is -2(right heavy) and this newly inserted node is in the in right rubstree, then this is a RIGHT RIGHT 
+  //if balance is -2(right heavy) and this newly inserted node is in the in right subtree, then this is a RIGHT RIGHT 
     else if (root->getBalance() == -2 && item.first > root->getRight()->getItem().first){
         return rotateLeft(root);
     }
@@ -307,12 +306,10 @@ void AVLTree<Key, Value>:: remove(const Key& key)
       if (leftChild) {
         if (temp == this->root_) this->root_ = rotateLeft(temp); //if root is getting changed after rebalancing 
         else rotateLeft(temp); //if deleted node was a left child, right rotation is needed.
-        //break;
         }
       else{
         if (temp == this->root_) this->root_ = rotateRight(temp);
         else rotateRight(temp); 
-       // break;
       } 
     }
     temp = temp->getParent(); //proceed to the next ancestor 
@@ -321,101 +318,61 @@ void AVLTree<Key, Value>:: remove(const Key& key)
   
 }
 
-//returns the node with its new children and parent after rotation. set prev node = rotateLeft
+//returns the node with its new children and parent after rotation. 
 template<class Key, class Value>
 AVLNode<Key, Value>* AVLTree<Key, Value>::rotateLeft(AVLNode<Key, Value>* node)
 {
-      AVLNode<Key, Value>* temp = node->getRight();
-      //if (temp == nullptr) return temp;
-  
-    node->setRight(temp->getLeft());
+	AVLNode<Key, Value>* temp = node->getRight();
+	if (temp == nullptr) return temp;
+	node->setRight(temp->getLeft());
  
-    // Update parent pointer of the
-    // right child of the root node
+		//updating root's children's parents
     if (temp->getLeft() != NULL)
         temp->getLeft()->setParent(node);
  
-    // Update the left child of the
-    // temp to root
+		//preforming left rotation 
     temp->setLeft(node);
- 
-    // Update parent pointer of
-    // the temp
     temp->setParent(node->getParent());
- 
-    // Update the parent pointer
-    // of the root
     node->setParent(temp);
- 
-    // Update tmpnode as the left or
-    // the right child of its parent
-    // pointer according to its key value
-    if (temp->getParent() != nullptr && node->getItem().first < temp->getParent()->getItem().first) {
-        temp->getParent()->setLeft(temp);
-    }
-    else {
-        if (temp->getParent() != nullptr)
-            temp->getParent()->setRight(temp);
-    }
- 
-    // Make tmpnode as the new root
+
+		//updating node's new parent's left or right child pointers
+    if (temp->getParent() != nullptr){
+			if (node->getItem().first < temp->getParent()->getItem().first){ //is left child
+				temp->getParent()->setLeft(temp);
+			}
+			else { //is a right child
+				temp->getParent()->setRight(temp);
+			}
+		}
     node = temp;
- 
-    // Return the root node
     return node;
-
-    /*
-  AVLNode<Key, Value>* temp = node->getRight();
-  node->setRight(temp->getLeft());
-  temp->setLeft(node);
-
-  temp->getLeft()->setParent(temp);
-  node->setParent(temp);
-  temp->setParent(node->getParent());
-  return temp;
-  */
 }
 
-//returns the node with its new children and parent after rotation. set prev node = rotateReft
 template<class Key, class Value>
 AVLNode<Key, Value>* AVLTree<Key, Value>::rotateRight(AVLNode<Key, Value>* node)
 {
-      AVLNode<Key, Value>* temp = node->getLeft();
-      if (temp == nullptr) return temp;
+	AVLNode<Key, Value>* temp = node->getLeft();
+	if (temp == nullptr) return temp;
   node->setLeft(temp->getRight());
 
   if (temp->getRight() != nullptr)
     temp->getRight()->setParent(node);
 
+	//preforming right rotation 
   temp->setRight(node);
   temp->setParent(node->getParent());
   node->setParent(temp);
   
-  if (temp->getParent() != nullptr && node->getItem().first < temp->getParent()->getItem().first) {
-        temp->getParent()->setLeft(temp);
-    }
-    else {
-        if (temp->getParent() != NULL)
-            temp->getParent()->setRight(temp);
-    }
- 
-    node = temp;
+  if (temp->getParent() != nullptr){
+		if ( node->getItem().first < temp->getParent()->getItem().first){
+			temp->getParent()->setLeft(temp); 
+		}
+		else{
+			temp->getParent()->setRight(temp);
+		}
+	}
+  node = temp;
   return node;
-
-
-
-    /*
-  AVLNode<Key, Value>* temp = node->getLeft();
-  node->setLeft(temp->getRight());
-  temp->setRight(node);
-
-  temp->setParent(node->getParent());
-
-  temp->getRight()->setParent(temp);
-  node->setParent(temp);
-  return temp; 
-  */
-  
 }
 
 template<class Key, class Value>

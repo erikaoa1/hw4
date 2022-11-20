@@ -572,15 +572,6 @@ BinarySearchTree<Key, Value>::predecessor(Node<Key, Value>* current)
 
 template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::clearHelper(Node<Key, Value>* root){
-  /*
-  if (root == nullptr){
-    return;
-  }
-  clearHelper(root->getLeft());
-  clearHelper(root->getRight());
-  remove(root->getItem().first);
-*/
-
 if (root == nullptr){
   return;
 }
